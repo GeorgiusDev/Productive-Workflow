@@ -1,0 +1,172 @@
+* { box-sizing: border-box; margin: 0; padding: 0;}
+
+body{
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #07111a 0%, #07161d 100%);
+    color: #e6eef6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.controls button {
+    background: #16a085; border: none; color: white; padding: 6px 10px;
+    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
+    transition-duration: 0.25s;
+}
+
+.controls button:hover{
+    filter: brightness(0.8);
+}
+
+.controls button:active{
+    filter: brightness(0.6)
+}
+
+#board {
+    display: flex;
+    gap: 14px;
+    padding: 20px;
+    overflow-x: auto;
+    align-items: flex-start;
+}
+
+.list {
+    width: 260px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, opacity .12s ease;
+    box-shadow: 0 6px 18px rgba(2,6,10,0.5);
+}
+
+.list.dragging {
+    opacity: 0.6;
+    transform: scale(.98);
+    box-shadow: 0 12px 26px rgba(2,6,10,0.75);
+}
+
+.list-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.handle {
+    cursor: grab;
+    user-select: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+    color: #a6c0bf;
+    font-weight: 700;
+}
+
+.list-title {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-weight: 700;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+.list-title:focus{
+    outline: 2px solid rgba(16,150,130,0.18);
+}
+
+.cards {
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    transition: background .15s;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background: #0f1720;
+    cursor: grab;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.card.dragging {
+    opacity: 0.6;
+    transform: scale(.99);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.card-text {
+    flex: 1;
+    word-break: break-word;
+}
+
+.delete-card {
+    background: transparent; border: none; color: #ff6b6b; font-weight: 700; cursor: pointer;
+}
+
+.add-card {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.add-card input {
+    flex: 1; padding: 8px; border-radius: 8px; border: none; background: rgba(255,255,255,0.02);
+    color: inherit;
+}
+
+.add-btn {
+    background: #16a085; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+}
+
+.card-edit {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+}
+
+.delete-list {
+    background: transparent;
+    border: none;
+    color: #ff6b6b;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    #board { padding: 12px; gap: 12px; }
+    .list { width: 220px; }
+}

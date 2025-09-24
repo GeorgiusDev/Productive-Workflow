@@ -1,0 +1,71 @@
+<!--
+
+BEFORE YOU USE THIS CODE BY ANY MEANS, YOU SHOULD READ FIRSTLY "README.md" AND "LICENSE.txt" FILES!
+
+THIS CODE USES MIT LICENSE, SO IF YOU ARE GOING TO REDISTRIBUTE THE PROGRAM, FOLLOW THE LICENSE 
+RULES AND CREDIT THE AUTHOR CORRECTLY!
+
+#####################################
+
+Copyright (c) 2025 GeorgiusDev
+
+https://georgius.dev
+
+#####################################
+
+THE COPYRIGHT TEXT ABOVE OR MUST BE VISIBLE IN YOUR LICENSE FOLDER OR SOMEWHERE VISIBLE ON THE
+APP.
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Productive Workflow</title>
+        <link rel="stylesheet" href="style.css" />
+    </head> 
+
+    <body>
+        <header>
+            <h1>Productive Workflow</h1>
+            <div class="controls">
+                <button id="newListBtn">+ New list</button>
+                <button id="exportBtn">Export JSON</button>
+                <input id="importFile" type="file" accept=".json" hidden>
+                <button id="importBtn">Import JSON</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </header>
+
+        <main id="board"></main>
+
+        <template id="listTemplate">
+            <div class="list">
+            <div class="list-header">
+                <span class="handle" title="Drag list">≡</span>
+                <input type="text" class="list-title" value="Untitled List">
+                <button class="delete-list" title="Delete list">×</button>
+            </div>
+
+            <div class="cards"></div>
+
+            <div class="add-card">
+                <input type="text" placeholder="Add card..." />
+                <button class="add-btn">+</button>
+            </div>
+            </div>
+        </template>
+
+        <template id="cardTemplate">
+            <div class="card">
+            <span class="card-text"></span>
+            <button class="delete-card" title="Delete card">×</button>
+            </div>
+        </template>
+
+        <script src="script.js"></script>
+
+    </body>
+</html>
