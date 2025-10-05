@@ -1,4 +1,7 @@
-* { box-sizing: border-box; margin: 0; padding: 0;}
+* { box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+  }
 
 body{
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
@@ -24,6 +27,38 @@ h1 {
     letter-spacing: 0.2px;
 }
 
+/* BOARD SWITCHER STYLE*/
+
+.board-switcher {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.board-switcher button,
+.board-switcher .board-tab {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    color: #e6eef6;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.board-switcher .board-tab.active {
+    background: #16a085;
+    color: #fff;
+}
+
+.board-switcher button:hover,
+.board-switcher .board-tab:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+/* CONTROL STYLE */
+
 .controls {
     display: flex;
     gap: 8px;
@@ -31,8 +66,14 @@ h1 {
 }
 
 .controls button {
-    background: #16a085; border: none; color: white; padding: 6px 10px;
-    border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
+    background: #16a085;
+    border: none; 
+    color: white; 
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.9rem;
     transition-duration: 0.25s;
 }
 
@@ -50,6 +91,31 @@ h1 {
     padding: 20px;
     overflow-x: auto;
     align-items: flex-start;
+    position: relative;
+}
+
+#board > .new-list-btn {
+    order: 99;
+}
+
+/* ADD BUTTON */
+.new-list-btn {
+    background: #16a085;
+    border: none; 
+    color: white; 
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.9rem;
+    transition-duration: 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.new-list-btn:hover { 
+    filter: brightness(0.8);
 }
 
 .list {
@@ -116,7 +182,7 @@ h1 {
     gap: 8px;
     padding: 8px;
     border-radius: 8px;
-    background: #0f1720;
+    background: #172330;
     cursor: grab;
     transition: transform .12s ease, box-shadow .12s ease;
 }
@@ -133,7 +199,11 @@ h1 {
 }
 
 .delete-card {
-    background: transparent; border: none; color: #ff6b6b; font-weight: 700; cursor: pointer;
+    background: transparent; 
+    border: none; 
+    color: #ff6b6b; 
+    font-weight: 700; 
+    cursor: pointer;
 }
 
 .add-card {
@@ -143,12 +213,20 @@ h1 {
 }
 
 .add-card input {
-    flex: 1; padding: 8px; border-radius: 8px; border: none; background: rgba(255,255,255,0.02);
+    flex: 1; padding: 8px; 
+    border-radius: 8px; 
+    border: none; 
+    background: rgba(255,255,255,0.02);
     color: inherit;
 }
 
 .add-btn {
-    background: #16a085; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+    background: #16a085; 
+    border: none; 
+    color: white; 
+    padding: 8px 10px; 
+    border-radius: 8px; 
+    cursor: pointer;
 }
 
 .card-edit {
@@ -167,6 +245,12 @@ h1 {
 }
 
 @media (max-width: 720px) {
-    #board { padding: 12px; gap: 12px; }
-    .list { width: 220px; }
+    #board { 
+        display: block;
+        overflow-x: visible;
+    }
+    .list { 
+        width: 100%;
+        margin-bottom: 15px;
+    }
 }
