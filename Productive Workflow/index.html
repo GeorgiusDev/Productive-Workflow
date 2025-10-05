@@ -30,8 +30,17 @@ APP.
     <body>
         <header>
             <h1>Productive Workflow</h1>
+
+            <!-- SWITCH BETWEEN BOARDS -->
+            <div class="board-switcher">
+                <div id="boards"></div>
+                <button id="addBoardBtn">+</button>
+                <button id="removeBoardBtn">-</button>
+            </div>
+
+            <!-- NAVIGATION AREA -->
             <div class="controls">
-                <button id="newListBtn">+ New list</button>
+
                 <button id="exportBtn">Export JSON</button>
                 <input id="importFile" type="file" accept=".json" hidden>
                 <button id="importBtn">Import JSON</button>
@@ -39,7 +48,9 @@ APP.
             </div>
         </header>
 
-        <main id="board"></main>
+        <main id="board">
+            <button id="newListBtn" class="new-list-btn">+</button>
+        </main>
 
         <template id="listTemplate">
             <div class="list">
@@ -55,9 +66,9 @@ APP.
                 <input type="text" placeholder="Add card..." />
                 <button class="add-btn">+</button>
             </div>
-            </div>
-        </template>
 
+               
+        </template>
         <template id="cardTemplate">
             <div class="card">
             <span class="card-text"></span>
