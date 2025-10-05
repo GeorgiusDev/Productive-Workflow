@@ -1,6 +1,11 @@
+//ONE BOARD
+
 const board = document.getElementById('board');
 const listTemplate = document.getElementById('listTemplate');
 const cardTemplate = document.getElementById('cardTemplate');
+
+
+//NAVIGATION LIST
 
 const newListBtn = document.getElementById('newListBtn');
 const resetBtn = document.getElementById('resetBtn');
@@ -11,11 +16,21 @@ const importFile = document.getElementById('importFile');
 let draggedCard = null;
 let draggedList = null;
 
+//BOARD SWITCHER
+
+const boardsContainer = document.getElementById('boards');
+const addBoardBtn = document.getElementById('addBoardBtn');
+const removeBoardBtn = document.getElementById('removeBoardBtn')
+
+let boardsData = {};
+let activeBoard = null;
+
 /*############### HANDLING LISTS AND CARDS ########## */
 
 function createList(title = 'Untitled List', cards = []){
     const frag = listTemplate.content.cloneNode(true);
     const listEl = frag.querySelector('.list');
+
     const titleInput = listEl.querySelector('.list-title');
     const deleteBtn = listEl.querySelector('.delete-list');
     const cardsContainer = listEl.querySelector('.cards');
@@ -70,6 +85,7 @@ function createList(title = 'Untitled List', cards = []){
         if (after == null) cardsContainer.appendChild(draggedCard);
         else cardsContainer.insertBefore(draggedCard, after);
     });
+
 
     board.appendChild(listEl);
     saveBoard();
@@ -174,31 +190,44 @@ board.addEventListener('dragover', e => {
 /*############## SAVING AND LOADING ########### */
 
 function saveBoard() {
+    if (!activeBoard) return;
+
     const data = [];
     document.querySelectorAll('.list').forEach(listEl => {
         const title = listEl.querySelector('.list-title').value;
         const cards = [...listEl.querySelectorAll('.card .card-text')].map(s => s.textContent);
         data.push({ title, cards });
     });
-    localStorage.setItem('productiveBoard', JSON.stringify(data));
+
+    boardsData[activeBoard] = data;
+    localStorage.setItem('productiveBoards', JSON.stringify({
+        boards: boardsData,
+        activeBoard: activeBoard
+    }));
 }
 
-function loadBoard(){
+function loadBoard() {
     board.innerHTML = '';
-    const saved = localStorage.getItem('productiveBoard');
-    if (saved) {
-        try {
-        const data = JSON.parse(saved);
-        data.forEach(list => createList(list.title, list.cards));
-        } catch (err) {
-        console.error('Failed to parse saved board', err);
-        createDefault();
-        }
-    } else {
-        createDefault();
-    }
 
-    setTimeout(() => saveBoard(), 50);
+    const newListBtn = createAddListButton();
+
+    if (boardsData[activeBoard]) {
+        boardsData[activeBoard].forEach(list => createList(list.title, list.cards, newListBtn));
+    } else {
+        createDefault(newListBtn);
+        saveBoard();
+    }
+}
+
+//BUTTON WHICH WILL BE NEXT TO THE CARDS
+function createAddListButton() {
+    const btn = document.createElement('button');
+    btn.id = 'newListBtn';
+    btn.className = 'new-list-btn';
+    btn.textContent = '+';
+    btn.addEventListener('click', () => createList());
+    board.appendChild(btn);
+    return btn;
 }
 
 //DEAFULT CARDS
@@ -219,32 +248,40 @@ function createDefault(){
 
 }
 
-function exportBoard(){
-    saveBoard();
-    const data = localStorage.getItem('productiveBoard') || '[]';
+function exportBoard() {
+    saveAll(); // make sure all boards are saved
+    const data = JSON.stringify({
+        boards: boardsData,
+        activeBoard: activeBoard
+    });
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'productive-workspace.json';
+    a.download = 'productive-boards.json';
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
 }
 
-function importBoardFile(file){
+function importBoardFile(file) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
-        const parsed = JSON.parse(e.target.result);
-        if (!Array.isArray(parsed)) throw new Error('Invalid board format');
-        localStorage.setItem('productiveBoard', JSON.stringify(parsed));
-        loadBoard();
-        alert('Board imported successfully.');
+            const parsed = JSON.parse(e.target.result);
+            if (!parsed.boards || !parsed.activeBoard) throw new Error('Invalid board format');
+
+            boardsData = parsed.boards;
+            activeBoard = parsed.activeBoard;
+
+            saveAll();
+            renderBoardTabs();
+            loadBoard();
+            alert('Board imported successfully.');
         } catch (err) {
-        alert('Failed to import board: ' + err.message);
+            alert('Failed to import board: ' + err.message);
         }
     };
     reader.readAsText(file);
@@ -254,6 +291,7 @@ function resetBoard(){
     if (!confirm('Reset board to defaults? This will remove saved board from this browser.')) return;
     localStorage.removeItem('productiveBoard');
     board.innerHTML = '';
+    board.appendChild(newListBtn);
     createDefault();
     saveBoard();
 }
@@ -270,6 +308,91 @@ importFile.addEventListener('change', (e) => {
     importFile.value = '';
 });
 
+//SWITCHING BOARDS SCRIPT
+
+function renderBoardTabs() {
+    boardsContainer.innerHTML = '';
+    Object.keys(boardsData).forEach(name => {
+        const tab = document.createElement('button');
+        tab.textContent = name;
+        tab.className = 'board-tab' + (name === activeBoard ? ' active' : '');
+        tab.addEventListener('click', () => {
+            activeBoard = name;
+            saveAll();
+            renderBoardTabs();
+            loadBoard();
+        });
+        boardsContainer.appendChild(tab);
+    });
+}
+
+function addBoard(name) {
+    if (boardsData[name]) {
+        alert('Board with this name already exists!');
+        return;
+    }
+    boardsData[name] = [
+        {title: 'TO DO', cards: []},
+        {title: 'DOING', cards: []},
+        {title: 'DONE', cards: []}
+    ];
+    activeBoard = name;
+    saveAll();
+    renderBoardTabs();
+    loadBoard();
+}
+
+
+function saveAll() {
+    localStorage.setItem('productiveBoards', JSON.stringify({
+        boards: boardsData,
+        activeBoard: activeBoard
+    }));
+}
+
+function loadAll() {
+    const saved = localStorage.getItem('productiveBoards');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            boardsData = parsed.boards || {};
+            activeBoard = parsed.activeBoard || Object.keys(boardsData)[0];
+        } catch (err) {
+            console.error('Failed to parse saved boards', err);
+            boardsData = {};
+            activeBoard = null;
+        }
+    }
+    if (!activeBoard) {
+        addBoard('Board 1');
+    }
+    renderBoardTabs();
+    loadBoard();
+}
+
+addBoardBtn.addEventListener('click', () => {
+    const name = prompt('Enter new board name:');
+    if (name) addBoard(name.trim());
+});
+
+removeBoardBtn.addEventListener('click', () => {
+
+    if (confirm('Are you sure you want to delete this board?')) {
+        if(!activeBoard){
+            alert('No active board to remove!')
+            return;
+        }
+
+        delete boardsData[activeBoard];
+        const remainingBoards = Object.keys(boardsData);
+        activeBoard = remainingBoards[0] || null;
+
+        saveAll();
+        renderBoardTabs();
+        loadAll();
+    }
+})
+
 //###########################################################
 
-loadBoard();
+loadAll();
